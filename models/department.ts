@@ -9,6 +9,7 @@ const DepartmentSchema = new Schema<IDepartment>({
     type: String,
     unique: true,
     required: [true, 'El nombre es requerido'],
+    lowercase: true,
   },
 });
 

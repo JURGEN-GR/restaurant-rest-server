@@ -9,6 +9,7 @@ const MenuSchema = new Schema<IMenu>({
     type: String,
     required: true,
     unique: true,
+    lowercase: true,
   },
 });
 

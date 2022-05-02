@@ -31,6 +31,13 @@ export const uploadImageUser = async (
   res: Response
 ): Promise<void> => {
   try {
+    if (!req.files) {
+      res.status(400).json({
+        msg: 'No se encontró ningún archivo',
+      });
+      return;
+    }
+
     const { id } = req.params;
     const file = req.files!.file as UploadedFile;
 
@@ -120,6 +127,13 @@ export const uploadImageDish = async (
   res: Response
 ): Promise<void> => {
   try {
+    if (!req.files) {
+      res.status(400).json({
+        msg: 'No se encontró ningún archivo',
+      });
+      return;
+    }
+
     const file = req.files!.file as UploadedFile;
 
     const fileFormat = file.mimetype.split('/')[1];

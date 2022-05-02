@@ -11,7 +11,7 @@ export const addMessageType = async (
     let type = await TypeMessage.findOne({ name });
     if (type) {
       res.status(400).json({
-        msg: 'El tipo de mensaje ya existe',
+        msg: 'Ya exite un tipo de mensaje con ese nombre',
       });
       return;
     }
@@ -59,7 +59,15 @@ export const updateMessageType = async (
     const { id } = req.params;
     const { name } = req.body;
 
-    let type = await TypeMessage.findByIdAndUpdate(id, { name }, { new: true });
+    let type = await TypeMessage.findOne({ name });
+    if (type) {
+      res.status(400).json({
+        msg: 'Ya exite un tipo de mensaje con ese nombre',
+      });
+      return;
+    }
+
+    type = await TypeMessage.findByIdAndUpdate(id, { name }, { new: true });
 
     if (!type) {
       res.status(400).json({

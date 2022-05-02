@@ -10,6 +10,7 @@ const RoleSchema = new Schema<IRole>({
   name: {
     type: String,
     required: [true, 'El nombre es requerido'],
+    lowercase: true,
   },
   screens: {
     type: [Schema.Types.ObjectId],

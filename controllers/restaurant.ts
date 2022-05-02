@@ -9,7 +9,7 @@ export const addRestaurant = async (req: Request, res: Response) => {
 
     if (restaurant) {
       res.status(400).json({
-        msg: 'El restaurante ya existe',
+        msg: 'Ya exite un restaurante con esa ubicacion',
       });
       return;
     }
@@ -55,7 +55,16 @@ export const updateRestaurant = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { location, lat, lng }: IRestaurant = req.body;
 
-    let restaurant = await Restaurant.findById(id);
+    let restaurant = await Restaurant.findOne({ location: location });
+
+    if (restaurant) {
+      res.status(400).json({
+        msg: 'Ya exite un restaurante con esa ubicacion',
+      });
+      return;
+    }
+
+    restaurant = await Restaurant.findById(id);
     if (!restaurant) {
       res.status(400).json({
         msg: 'No se encontro el restaurante',

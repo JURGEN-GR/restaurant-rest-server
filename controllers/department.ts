@@ -11,7 +11,7 @@ export const addDepartment = async (
     let department = await Department.findOne({ name });
     if (department) {
       res.status(400).json({
-        msg: 'El departamento ya existe',
+        msg: 'Ya exite un departamento con ese nombre',
       });
       return;
     }
@@ -53,7 +53,15 @@ export const updateDepartment = async (req: Request, res: Response) => {
     const { name }: IDepartment = req.body;
     const { id } = req.params;
 
-    const department = await Department.findByIdAndUpdate(
+    let department = await Department.findOne({ name });
+    if (department) {
+      res.status(400).json({
+        msg: 'Ya exite un departamento con ese nombre',
+      });
+      return;
+    }
+
+    department = await Department.findByIdAndUpdate(
       id,
       { name },
       { new: true }

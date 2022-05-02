@@ -34,10 +34,12 @@ const MessageSchema = new Schema<IMessage>({
   name: {
     type: String,
     required: true,
+    lowercase: true,
   },
   email: {
     type: String,
     required: true,
+    lowercase: true,
   },
   typeMessage: {
     type: Schema.Types.ObjectId,

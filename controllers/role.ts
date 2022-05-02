@@ -8,7 +8,7 @@ export const addRole = async (req: Request, res: Response): Promise<void> => {
     let role = await Role.findOne({ name });
     if (role) {
       res.status(400).json({
-        msg: 'El rol ya existe',
+        msg: 'Ya exite un rol con ese nombre',
       });
       return;
     }
@@ -52,7 +52,15 @@ export const updateRole = async (
     const { name, screens }: IRole = req.body;
     const { id } = req.params;
 
-    let role = await Role.findById(id);
+    let role = await Role.findOne({ name });
+    if (role) {
+      res.status(400).json({
+        msg: 'Ya exite un rol con ese nombre',
+      });
+      return;
+    }
+
+    role = await Role.findById(id);
     if (!role) {
       res.status(400).json({
         msg: 'No se enconró el rol',

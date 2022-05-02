@@ -12,6 +12,7 @@ const RestaurantSchema = new Schema<IRestaurant>({
     type: String,
     required: [true, 'La dirección es requerida'],
     unique: true,
+    lowercase: true,
   },
   lng: {
     type: Number,

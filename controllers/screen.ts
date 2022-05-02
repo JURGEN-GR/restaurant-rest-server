@@ -9,7 +9,7 @@ export const addScreen = async (req: Request, res: Response): Promise<void> => {
 
     if (screen) {
       res.status(400).json({
-        msg: 'Esta pantalla ya existe',
+        msg: 'Ya exite una pantalla con ese nombre',
       });
       return;
     }

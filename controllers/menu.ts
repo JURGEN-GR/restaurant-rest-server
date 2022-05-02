@@ -7,7 +7,7 @@ export const addMenu = async (req: Request, res: Response): Promise<void> => {
     let menu = await Menu.findOne({ name });
     if (menu) {
       res.status(400).json({
-        msg: 'El menu ya existe',
+        msg: 'Ya exite un menu con ese nombre',
       });
       return;
     }
@@ -51,7 +51,16 @@ export const updateMenu = async (
   try {
     const { id } = req.params;
     const { name } = req.body;
-    const menu = await Menu.findByIdAndUpdate(id, { name }, { new: true });
+
+    let menu = await Menu.findOne({ name });
+    if (menu) {
+      res.status(400).json({
+        msg: 'Ya exite un menu con ese nombre',
+      });
+      return;
+    }
+
+    menu = await Menu.findByIdAndUpdate(id, { name }, { new: true });
     if (!menu) {
       res.status(400).json({
         msg: 'El menu no existe',

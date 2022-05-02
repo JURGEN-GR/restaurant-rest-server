@@ -7,7 +7,7 @@ export const addDish = async (req: Request, res: Response): Promise<void> => {
     let dish = await Dish.findOne({ name });
     if (dish) {
       res.status(400).json({
-        message: 'El plato ya existe',
+        msg: 'Ya exite un plato con ese nombre',
       });
       return;
     }
@@ -54,7 +54,15 @@ export const updateDish = async (
     const { id } = req.params;
     const { media_library, ...rest }: IDish = req.body;
 
-    const dish = await Dish.findByIdAndUpdate(id, rest, { new: true }).populate(
+    let dish = await Dish.findOne({ name });
+    if (dish) {
+      res.status(400).json({
+        msg: 'Ya exite un plato con ese nombre',
+      });
+      return;
+    }
+
+    dish = await Dish.findByIdAndUpdate(id, rest, { new: true }).populate(
       'menu',
       'name'
     );
