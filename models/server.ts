@@ -1,5 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import fileUpload from 'express-fileupload';
+
 import dbConnection from '../database/config';
 import authRoutes from '../routes/auth';
 import screenRoutes from '../routes/screen';
@@ -9,6 +11,8 @@ import departmentRoutes from '../routes/department';
 import userRoutes from '../routes/user';
 import menuRoutes from '../routes/menu';
 import dishRoutes from '../routes/dish';
+import uploadsRoutes from '../routes/uploads';
+import messagesRoutes from '../routes/messages';
 
 export default class Server {
   private app: Application;
@@ -23,6 +27,8 @@ export default class Server {
     department: '/api/department',
     menu: '/api/menu',
     dish: '/api/dish',
+    uploads: '/api/uploads',
+    messages: '/api/messages',
   };
 
   constructor() {
@@ -44,6 +50,14 @@ export default class Server {
     this.app.use(cors());
     // body parser
     this.app.use(express.json());
+    // file upload
+    this.app.use(
+      fileUpload({
+        useTempFiles: true,
+        tempFileDir: '/tmp/',
+        createParentPath: true,
+      })
+    );
   }
 
   private routes(): void {
@@ -55,6 +69,8 @@ export default class Server {
     this.app.use(this.apiPaths.department, departmentRoutes);
     this.app.use(this.apiPaths.menu, menuRoutes);
     this.app.use(this.apiPaths.dish, dishRoutes);
+    this.app.use(this.apiPaths.uploads, uploadsRoutes);
+    this.app.use(this.apiPaths.messages, messagesRoutes);
   }
 
   listen(): void {

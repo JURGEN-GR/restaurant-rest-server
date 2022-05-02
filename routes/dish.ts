@@ -5,5 +5,6 @@ const router = Router();
 
 router.post('/', dishController.addDish);
 router.get('/', dishController.getDishes);
+router.put('/:id', dishController.updateDish);
 
 export default router;

@@ -30,7 +30,6 @@ const DishSchema = new Schema<IDish>({
   },
   media_library: {
     type: [String],
-    required: true,
     maxlength: 4,
   },
 });
