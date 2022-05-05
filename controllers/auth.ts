@@ -51,8 +51,13 @@ export const revalidateToken = async (
   try {
     const { _id } = req;
     const token = await generateJwt(_id);
+    const user = await User.findById(_id).populate(
+      'role department restaurant',
+      'name location'
+    );
     res.status(200).json({
       msg: 'Token renovado correctamente',
+      user,
       token,
     });
     return;
