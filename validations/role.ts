@@ -8,6 +8,7 @@ export const validationsAddRole = [
 ];
 
 export const validationsUpdateRole = [
+  check('id', 'El id no es valido').escape().isMongoId(),
   check('name', 'El nombre no es valido')
     .if(check('name').exists())
     .escape()

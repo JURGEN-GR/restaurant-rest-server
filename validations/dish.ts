@@ -10,6 +10,7 @@ export const validationsAddDish = [
 ];
 
 export const validationsUpdateDish = [
+  check('id', 'El id no es valido').escape().isMongoId(),
   check('name', 'El nombre no es válido')
     .if(check('name').exists())
     .escape()

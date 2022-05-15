@@ -21,6 +21,7 @@ router.get('/', departmentController.getDepartments);
 router.put(
   '/:id',
   [
+    check('id', 'El id no es valido').escape().isMongoId(),
     check('name', 'El nombre no es valido').escape().not().isEmpty(),
     searchErrors,
   ],

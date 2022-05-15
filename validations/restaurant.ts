@@ -9,6 +9,7 @@ export const validationsAddRestaurant = [
 ];
 
 export const validationsUpdateRestaurant = [
+  check('id', 'El id no es valido').escape().isMongoId(),
   check('location', 'La dirección no es valida')
     .if(check('location').exists())
     .not()

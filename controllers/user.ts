@@ -88,10 +88,15 @@ export const updateUser = async (
     const { ...data }: IUser = req.body;
 
     // Encriptar contraseña
-    const salt = await bcrypt.genSalt(10);
-    data.password = await bcrypt.hash(data.password, salt);
+    if (data.password) {
+      const salt = await bcrypt.genSalt(10);
+      data.password = await bcrypt.hash(data.password, salt);
+    }
 
-    const user = await User.findByIdAndUpdate(id, data, { new: true });
+    const user = await User.findByIdAndUpdate(id, data, { new: true }).populate(
+      'role department restaurant',
+      'name location'
+    );
 
     if (!user) {
       res.status(404).json({
@@ -109,6 +114,33 @@ export const updateUser = async (
     console.log(error);
     res.status(500).json({
       msg: 'Error al actualizar el usuario hable con el administrador',
+      error,
+    });
+    return;
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) {
+      res.status(404).json({
+        msg: 'No se encontró el usuario',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      msg: 'Usuario eliminado correctamente',
+      user,
+    });
+    return;
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: 'Error al eliminar el usuario hable con el administrador',
       error,
     });
     return;
