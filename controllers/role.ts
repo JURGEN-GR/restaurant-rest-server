@@ -13,7 +13,10 @@ export const addRole = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    role = await Role.create({ name, screens });
+    role = await (
+      await Role.create({ name, screens })
+    ).populate('screens', 'name');
+
     res.json({
       msg: 'Rol creado correctamente',
       role,
@@ -68,7 +71,12 @@ export const updateRole = async (
       return;
     }
 
-    role = await Role.findByIdAndUpdate(id, { name, screens }, { new: true });
+    role = await Role.findByIdAndUpdate(
+      id,
+      { name, screens },
+      { new: true }
+    ).populate('screens', 'name');
+
     res.json({
       msg: 'Rol actualizado correctamente',
       role,
