@@ -6,10 +6,13 @@ import { generateJwt } from '../helpers/generate-jwt';
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password }: IUser = req.body;
-    const user = await User.findOne({ email }).populate(
-      'role department restaurant',
-      'name location'
-    );
+    const user = await User.findOne({ email })
+      .populate('department restaurant', 'name location')
+      .populate({
+        path: 'role',
+        select: 'name screens',
+        populate: { path: 'screens', select: 'name' },
+      });
     // Validar si el usuario existe
     if (!user) {
       res.status(400).json({
@@ -51,10 +54,13 @@ export const revalidateToken = async (
   try {
     const { _id } = req;
     const token = await generateJwt(_id);
-    const user = await User.findById(_id).populate(
-      'role department restaurant',
-      'name location'
-    );
+    const user = await User.findById(_id)
+      .populate('department restaurant', 'name location')
+      .populate({
+        path: 'role',
+        select: 'name screens',
+        populate: { path: 'screens', select: 'name' },
+      });
     res.status(200).json({
       msg: 'Token renovado correctamente',
       user,
