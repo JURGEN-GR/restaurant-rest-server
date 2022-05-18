@@ -20,7 +20,6 @@ const RoleSchema = new Schema<IRole>({
   active: {
     type: Boolean,
     default: true,
-    required: true,
   },
 });
 

@@ -7,7 +7,7 @@ export interface IMenu {
 const MenuSchema = new Schema<IMenu>({
   name: {
     type: String,
-    required: true,
+    required: [true, 'El nombre es requerido'],
     unique: true,
     lowercase: true,
   },

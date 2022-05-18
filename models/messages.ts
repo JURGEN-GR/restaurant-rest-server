@@ -33,22 +33,22 @@ export interface IMessage {
 const MessageSchema = new Schema<IMessage>({
   name: {
     type: String,
-    required: true,
+    required: [true, 'El nombre es requerido'],
     lowercase: true,
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'El email es requerido'],
     lowercase: true,
   },
   typeMessage: {
     type: Schema.Types.ObjectId,
     ref: 'TypeMessage',
-    required: true,
+    required: [true, 'El tipo de mensaje es requerido'],
   },
   message: {
     type: String,
-    required: true,
+    required: [true, 'El mensaje es requerido'],
   },
 });
 

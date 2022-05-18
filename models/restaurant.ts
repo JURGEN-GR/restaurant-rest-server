@@ -25,7 +25,6 @@ const RestaurantSchema = new Schema<IRestaurant>({
   active: {
     type: Boolean,
     default: true,
-    required: true,
   },
 });
 

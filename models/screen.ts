@@ -15,7 +15,6 @@ const ScreenSchema = new Schema<IScreen>({
   active: {
     type: Boolean,
     default: true,
-    required: true,
   },
 });
 

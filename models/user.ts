@@ -57,7 +57,6 @@ const UserSchema = new Schema<IUser>({
   active: {
     type: Boolean,
     default: true,
-    required: true,
   },
 });
 

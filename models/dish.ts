@@ -6,27 +6,38 @@ export interface IDish {
   menu: Schema.Types.ObjectId;
   price: number;
   media_library: String[];
+  specialty: boolean;
+  favorite: boolean;
 }
 
 const DishSchema = new Schema<IDish>({
   name: {
     type: String,
-    required: true,
+    required: [true, 'El nombre es requerido'],
     unique: true,
     lowercase: true,
   },
   description: {
     type: String,
-    required: true,
+    required: [true, 'La descripción es requerida'],
   },
   menu: {
     type: Schema.Types.ObjectId,
     ref: 'Menu',
-    required: true,
+    required: [true, 'El menú al que pertenece es requerido'],
   },
   price: {
     type: Number,
-    required: true,
+    required: [true, 'El precio es requerido'],
+  },
+  specialty: {
+    type: Boolean,
+    default: false,
+    unique: true,
+  },
+  favorite: {
+    type: Boolean,
+    default: false,
   },
   media_library: {
     type: [String],
