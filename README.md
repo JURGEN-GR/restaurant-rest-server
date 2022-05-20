@@ -10,15 +10,10 @@ Cuenta con autenticación de usuarios por medio de JWT, subida de imágenes y vi
 
 - Renombre el archivo de "example.env" a ".env" para cargar correctamente las variables de entorno y llénelas
 
-Antes de correr el proyecto genere la carpeta "dist", ejecute:
-
-```
-tsc -w
-```
-
 Para correr el proyecto solo ejecute:
 
 ```
 npm install
+tsc -w
 npm start
 ```
