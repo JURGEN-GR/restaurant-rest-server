@@ -30,15 +30,6 @@ const DishSchema = new Schema<IDish>({
     type: Number,
     required: [true, 'El precio es requerido'],
   },
-  specialty: {
-    type: Boolean,
-    default: false,
-    unique: true,
-  },
-  favorite: {
-    type: Boolean,
-    default: false,
-  },
   media_library: {
     type: [String],
     maxlength: 4,

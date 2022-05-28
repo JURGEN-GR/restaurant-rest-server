@@ -31,6 +31,8 @@ export const uploadImageUser = async (
   res: Response
 ): Promise<void> => {
   try {
+    const formatsImages = ['jpg', 'jpeg', 'png', 'gif', 'svg'];
+
     if (!req.files) {
       res.status(400).json({
         msg: 'No se encontró ningún archivo',
@@ -42,16 +44,23 @@ export const uploadImageUser = async (
     const file = req.files!.file as UploadedFile;
 
     const fileFormat = file.mimetype.split('/')[1];
-    if (!formats.includes(fileFormat)) {
+    if (!formatsImages.includes(fileFormat)) {
       res.status(400).json({
-        msg: `formato de archivo no permitido solo se aceptan: ${formats.join(
+        msg: `formato de archivo no permitido solo se aceptan: ${formatsImages.join(
           ', '
         )}`,
       });
       return;
     }
 
-    const user = await User.findById(id);
+    const user = await User.findById(id)
+      .populate('department restaurant', 'name location')
+      .populate({
+        path: 'role',
+        select: 'name screens',
+        populate: { path: 'screens', select: 'name' },
+      });
+
     if (!user) {
       res.status(400).json({
         msg: 'No se encontró el usuario',
@@ -164,7 +173,9 @@ export const uploadImageDish = async (
     }
 
     // Subir la nueva imagen
-    const { url } = await cloudinary.uploader.upload(file.tempFilePath);
+    const { url } = await cloudinary.uploader.upload(file.tempFilePath, {
+      resource_type: 'auto',
+    });
     dish.media_library.push(url);
     await dish.save();
 
@@ -190,7 +201,7 @@ export const deleteImageDish = async (
     const { id } = req.params;
     const { url } = req.body;
 
-    const dish = await Dish.findById(id);
+    const dish = await Dish.findById(id).populate('menu', 'name');
     if (!dish) {
       res.status(400).json({
         msg: 'No se encontró el plato',
@@ -205,10 +216,21 @@ export const deleteImageDish = async (
       return;
     }
 
-    // Borrar la imagen anterior
+    // Borrar la imagen
     const nameImage = url.split('/').pop();
-    const [publicId] = nameImage!.split('.');
-    await cloudinary.uploader.destroy(publicId);
+    const [publicId, type] = nameImage!.split('.');
+
+    const formatsVideo = ['mp4', 'wmv', 'avi', 'mov'];
+
+    if (formatsVideo.includes(type)) {
+      await cloudinary.uploader.destroy(publicId, {
+        resource_type: 'video',
+      });
+    } else {
+      await cloudinary.uploader.destroy(publicId, {
+        resource_type: 'image',
+      });
+    }
 
     // Eliminar la imagen del array
     const index = dish.media_library.indexOf(url);

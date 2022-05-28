@@ -85,18 +85,15 @@ export const updateUser = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { ...data }: IUser = req.body;
+    const { newPassword, ...data } = req.body;
 
-    // Encriptar contraseña
-    if (data.password) {
-      const salt = await bcrypt.genSalt(10);
-      data.password = await bcrypt.hash(data.password, salt);
-    }
-
-    const user = await User.findByIdAndUpdate(id, data, { new: true }).populate(
-      'role department restaurant',
-      'name location'
-    );
+    let user = await User.findById(id)
+      .populate('department restaurant', 'name location')
+      .populate({
+        path: 'role',
+        select: 'name screens',
+        populate: { path: 'screens', select: 'name' },
+      });
 
     if (!user) {
       res.status(404).json({
@@ -104,6 +101,30 @@ export const updateUser = async (
       });
       return;
     }
+
+    // Encriptar contraseña
+    if (data.password) {
+      // Comprobar que la contraseña anterior sea correcta
+      const isMatch = await bcrypt.compare(data.password, user.password);
+      if (!isMatch) {
+        res.status(400).json({
+          msg: 'Contraseña incorrecta',
+        });
+        return;
+      }
+
+      // Encriptar la nueva contraseña
+      const salt = await bcrypt.genSalt(10);
+      data.password = await bcrypt.hash(newPassword, salt);
+    }
+
+    user = await User.findByIdAndUpdate(id, data, { new: true })
+      .populate('department restaurant', 'name location')
+      .populate({
+        path: 'role',
+        select: 'name screens',
+        populate: { path: 'screens', select: 'name' },
+      });
 
     res.status(200).json({
       msg: 'Usuario actualizado correctamente',

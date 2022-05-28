@@ -11,5 +11,6 @@ router.use(validateJwt);
 router.post('/', validationsAddDish, dishController.addDish);
 router.get('/', dishController.getDishes);
 router.put('/:id', validationsUpdateDish, dishController.updateDish);
+router.delete('/:id', dishController.deleteDish);
 
 export default router;
